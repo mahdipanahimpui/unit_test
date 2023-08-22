@@ -6,7 +6,7 @@ import one
 # the class name is <file_to_test>Test
 class OneTest(unittest.TestCase):
     # test_<def that is going to test>
-    def test_devision(self):
+    def test_division(self):
         self.assertEqual(one.devision(-1, 4), -.25)
         # for devisions:
         self.assertRaises(ZeroDivisionError, one.devision, 4, 0)
