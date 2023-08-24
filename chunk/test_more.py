@@ -1,6 +1,6 @@
 from unittest import TestCase
 import more
-
+import traceback
 
 class TakeTests(TestCase):
     def test_simple_take(self):
@@ -58,4 +58,28 @@ class ChunkedTests(TestCase):
         def f():
             return list(more.chunked('ABCDE', None, strict=True))
         self.assertRaisesRegex(ValueError, 'n cant be None when strict is true', f)
+
+
+
+class FirstTests(TestCase):
+    def test_many(self):
+        self.assertEqual(more.first([x for x in range(4)]), 0)
+
     
+    def test_one(self):
+        self.assertEqual(more.first([3]), 3)
+
+
+    def test_default(self):
+        self.assertEqual(more.first([], 'hello'), 'hello')
+
+    
+    def test_empty_stop_iteraion(self):
+        try:
+            more.first([])
+        except ValueError:
+            formatted_exc = traceback.format_exc()
+            self.assertIn('StopIteration', formatted_exc) # 'StopIteration' contains in the exception
+            self.assertIn('first() called on empty iterable', formatted_exc)
+        else:
+            self.fail() # execute if no exceptions are raised

@@ -29,7 +29,24 @@ def chunked(iterable, n, strict=False):
         return iter(ret())
 
     return iterator
-
-
-
 # print(list(chunked(l, 3, True)))
+
+
+
+_marker = object()
+
+def first(iterable, default=_marker):
+    try:
+        return next(iter(iterable))
+    except StopIteration as e:
+        if default is _marker: # if default not sent
+            raise ValueError('first() called on empty iterable') from e
+        return default # default action
+    
+
+# print(first([]))
+# print(first([], 'hello'))
+
+
+
+
