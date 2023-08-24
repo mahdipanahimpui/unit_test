@@ -1,9 +1,11 @@
 from itertools import islice
 from functools import partial
-
+from collections.abc import Sequence
+from collections import deque
 
 l = [1, 2, 3, 4, 5, 6, 7]
-
+_marker = object()
+e = []
 
 def take(iterable, n):
     return list(islice(iterable, n))
@@ -32,8 +34,8 @@ def chunked(iterable, n, strict=False):
 # print(list(chunked(l, 3, True)))
 
 
+# ------------------------------------------------
 
-_marker = object()
 
 def first(iterable, default=_marker):
     try:
@@ -49,4 +51,27 @@ def first(iterable, default=_marker):
 
 
 
+
+# ------------------------------------------------------
+
+# last:
+
+def last(iterable, default=_marker):
+    try:
+        if isinstance(iterable, Sequence): # IndexError
+            return iterable[-1]
+        elif hasattr(iterable, '__reversed__'):
+            return next(reversed(iterable)) # StopIteration
+        else:
+            return deque(iterable, maxlen=1)[-1] # TypeError
+        
+    except (IndexError, TypeError, StopIteration):
+
+        if default is _marker:
+            raise ValueError(
+                'last() was called on empty iterable' 
+            )
+        
+        return default
+    
 

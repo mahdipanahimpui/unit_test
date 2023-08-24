@@ -83,3 +83,39 @@ class FirstTests(TestCase):
             self.assertIn('first() called on empty iterable', formatted_exc)
         else:
             self.fail() # execute if no exceptions are raised
+
+# ------------------------------------------------------------------
+# subtest
+class LastTests(TestCase):
+    def test_basic(self):
+        cases = [
+            (range(4), 3),
+            (iter(range(4)), 3),
+            (range(1), 0),
+            ({n: str(n) for n in range(5)}, 4)
+
+        ]
+
+        for iterable, expected in cases:
+            with self.subTest(iterable=iterable): # subtest point to wich loop error is ocured
+                self.assertEqual(more.last(iterable), expected)
+
+
+
+    def test_default(self):
+        for iterable, default, expected in [
+            (range(1), None, 0), 
+            ([], None, None), 
+            ({}, None, None),
+            (iter([]), None, None)
+        ]:
+            with self.subTest(args=(iterable, default)): # the <args> name is what you want
+                self.assertEqual(more.last(iterable, default=default), expected)
+
+
+    
+    def test_empty(self):
+        for iterable in ([], iter(range(0))):
+            with self.subTest(iterable=iterable):
+                with self.assertRaises(ValueError): # <with> means test <self.assertRaises(ValueError)> with the more.last(iterable)
+                    more.last(iterable)
