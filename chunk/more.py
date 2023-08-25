@@ -3,7 +3,7 @@ from functools import partial
 from collections.abc import Sequence
 from collections import deque
 
-l = [1, 2, 3, 4, 5, 6, 7]
+l = [0, 1, 2, 3, 4, 5, 6, 7]
 _marker = object()
 e = []
 
@@ -75,3 +75,8 @@ def last(iterable, default=_marker):
         return default
     
 
+
+def nth_or_last(iterable, n, default=_marker):
+    return last(islice(iterable, n+1), default=default)
+
+print(last(e, 3), )
