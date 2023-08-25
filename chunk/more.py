@@ -16,6 +16,7 @@ def take(iterable, n):
 # iter(iterable) => iterator
 # iter(iterable, sentinel) => iterator, until the iterable should be as same as sentinel, iterate is doing
 
+# chunk an iterable, strict true, is for dividabel chunk
 def chunked(iterable, n, strict=False):
     iterator = iter(partial(take, iter(iterable), n), [])
     if strict:
@@ -36,7 +37,7 @@ def chunked(iterable, n, strict=False):
 
 # ------------------------------------------------
 
-
+# returns the first of iterable if not exists returns default
 def first(iterable, default=_marker):
     try:
         return next(iter(iterable))
@@ -54,7 +55,7 @@ def first(iterable, default=_marker):
 
 # ------------------------------------------------------
 
-# last:
+# last: returns the nth item of not found default returns
 
 def last(iterable, default=_marker):
     try:
@@ -83,6 +84,7 @@ def nth_or_last(iterable, n, default=_marker):
 
 
 # ---------------------------------------------------------
+# an iterable just have 1 element not less or more
 
 def one(iterable, too_short=None, too_long=None):
     it = iter(iterable)
