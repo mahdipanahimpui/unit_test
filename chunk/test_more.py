@@ -178,4 +178,29 @@ class OneTests(TestCase):
             'Expected exactly one item in iterable, but got 0, 1, and perhaps more.',
             lambda: more.one(it)
         )
+
+
+
+
+class InterLeaveTests(TestCase):
+    def test_even(self):
+        actual = list(more.interleave([1, 2], [3, 4]))
+        expected = [1, 3, 2, 4]
+        self.assertEqual(actual, expected)
+
+
+    def test_short(self):
+        actual = list(more.interleave([1, 2, 3], [4, 5]))
+        excepted = [1, 4, 2, 5]
+        self.assertEqual(actual, excepted)
+
+
+    def test_mixed_types(self):
+        it_list = ['a', 'b', 'c']
+        it_str = '1234'
+        it_inf = count() #NOTE: every iterator is a iterable but not inverse
+        acutal = list(more.interleave(it_list, it_str, it_inf))
+        expected = ['a', '1', 0, 'b', '2', 1, 'c', '3', 2]
+        self.assertEqual(acutal, expected)
+
         

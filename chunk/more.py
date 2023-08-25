@@ -106,3 +106,21 @@ def one(iterable, too_short=None, too_long=None):
         )
         raise too_long or ValueError(msg)
     return first_value
+
+
+
+
+
+# --------------------------------------------------------------
+
+# interLeave
+
+# join many iterable zigzagi based on shortest list
+from itertools import chain
+
+def interleave(*iterable): # * means many iterable is passed iterable=(iterable, iterable, ..)
+    return chain.from_iterable(zip(*iterable)) # *iterable=iterable iterable ...    * used to unpack
+    # returns an itertool.chain object use list to see
+
+
+# print(list(interleave(['amri'], 'hello')))
