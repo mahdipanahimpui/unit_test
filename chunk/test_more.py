@@ -1,6 +1,7 @@
 from unittest import TestCase
 import more
 import traceback
+from itertools import count
 
 class TakeTests(TestCase):
     def test_simple_take(self):
@@ -136,3 +137,45 @@ class NthOrLastTests(TestCase):
         # self.assertRaises(ValueError, more.nth_or_last(range(0), 0)) # it is false, because error not returned,
         # to return error, use lambda
         self.assertRaises(ValueError, lambda: more.nth_or_last(range(0), 0))
+
+
+
+
+class OneTests(TestCase):
+    def test_basic(self):
+        it = ['item']
+        self.assertEqual(more.one(it), 'item')
+
+    def test_short(self):
+        it = []
+        for too_short, exc_type in [
+            (None, ValueError),
+            (IndexError, IndexError)
+        ]:
+            with self.subTest(too_short=too_short):
+                try:
+                    more.one(it, too_short=too_short)
+                except exc_type:
+                    formatted_exc = traceback.format_exc()
+                    self.assertIn('StopIteration', formatted_exc)
+                    self.assertIn('The above exception was the direct cause', formatted_exc)
+                
+                else:
+                    self.fail()
+
+    def test_too_long(self):
+        it = count() # just count(by next()) from 0 to unlimit,
+        self.assertRaises(ValueError, lambda: more.one(it))
+        self.assertEqual(next(it), 2)
+        self.assertRaises(
+            OverflowError, lambda: more.one(it, too_long=OverflowError)
+        )
+
+    def test_too_long_default_message(self):
+        it = count()
+        self.assertRaisesRegex(
+            ValueError, 
+            'Expected exactly one item in iterable, but got 0, 1, and perhaps more.',
+            lambda: more.one(it)
+        )
+        
