@@ -276,3 +276,25 @@ def split_after(iterable, pred, max_split=-1):
 
 # w = 'csxfexfasexfsx'
 # print(list(split_after(w, lambda s: s == 'x', max_split=1)))
+
+
+#------------------------------------------------------------
+# split inoto sizes in a iterable
+
+def split_into(iterable, sizes):
+    it = iter(iterable)
+    
+    for size in sizes:
+        if size is None:
+            yield list(it) # yielding the rest of it that is not iterated
+            return
+        else:
+            yield list(islice(it, size)) # islice done on rest of it thet is not iterated
+
+
+
+# iterable = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+# iterable = []
+# sizes = [2, 3, None, 2]
+# actual = list(split_into(iterable, sizes))
+# print(actual)
