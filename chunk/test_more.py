@@ -370,3 +370,99 @@ class AlwaysReversibelTests(TestCase):
         )
 
 
+
+class AlwaysIterableTests(TestCase):
+    def test_singel(self):
+        self.assertEqual(list(more.always_iterable(1)), [1])
+
+    def test_string_byte(self):
+        # b in b'bar' means byte
+        for obj in ['foo', b'bar', 'baz']:
+            actual = list(more.always_iterable(obj))
+            excepted = [obj]
+            self.assertEqual(actual, excepted)
+
+    def test_base_type(self):
+        dict_obj = {'a':1, 'b':2}
+        str_obj = '123'
+
+        default_actual = list(more.always_iterable(dict_obj))
+        default_expected = list(dict_obj)
+        self.assertEqual(default_actual, default_expected)
+
+
+        custom_acutal = list(more.always_iterable(dict_obj, base_type=dict))
+        custom_expected = [dict_obj]
+        self.assertEqual(custom_acutal, custom_expected)
+
+        str_actual = list(more.always_iterable(str_obj, base_type=None))
+        str_expected = list(str_obj)
+        self.assertEqual(str_actual, str_expected)
+
+        base_type = ((dict,),)
+        custom_actual = list(more.always_iterable(dict_obj, base_type=base_type))
+        custom_expected = [dict_obj]
+        self.assertEqual(custom_actual, custom_expected)
+
+
+    def test_iterables(self):
+        self.assertEqual(list(more.always_iterable([0,1])), [0,1])
+        self.assertEqual(list(more.always_iterable([0,1], base_type=list)), [[0,1]])
+        self.assertEqual(list(more.always_iterable(iter('foo'))), ['f', 'o', 'o'])
+        self.assertEqual(list(more.always_iterable([])), [])
+
+
+    def test_generator(self):
+        def _gen():
+            yield 0
+            yield 1
+        self.assertEqual(list(more.always_iterable(_gen())), [0,1])
+
+
+
+
+
+class TestSplitAfter(TestCase):
+    def test_start_with_sep(self):
+        actual = list(more.split_after('xooxoo', lambda c: c == 'x'))
+        expected = [['x'], ['o', 'o', 'x'], ['o', 'o']]
+        self.assertEqual(actual, expected)
+
+    def test_ends_with_sep(self):
+        actual = list(more.split_after('ooxoox', lambda c: c == 'x'))
+        expected = [['o', 'o', 'x'], ['o', 'o', 'x']]
+        self.assertEqual(actual, expected)
+
+
+    def test_no_sep(self):
+        actual = list(more.split_after('ooo', lambda c: c == 'x'))
+        expected = [['o', 'o', 'o']]
+        self.assertEqual(actual, expected)
+
+
+    def test_max_split(self):
+        for args, expected in [
+            (
+                ('a,b,c,d', lambda c: c == ',', -1),
+                [['a', ','], ['b', ','], ['c', ','], ['d']]
+            ),
+
+            (
+                ('a,b,c,d', lambda c: c == ',', 0),
+                [['a', ',', 'b', ',', 'c', ',', 'd']]
+            ),
+
+            (
+                ('a,b,c,d', lambda c: c == ',', 1),
+                [['a', ','], ['b', ',', 'c', ',', 'd']]
+            ),
+
+            (
+                ('a,b,c,d', lambda c: c == ',', 2),
+                [['a', ','], ['b', ','], ['c', ',', 'd']]
+            )
+
+
+        ]:
+            actual = list(more.split_after(*args)) # * used to open the tuple
+            self.assertEqual(actual, expected)

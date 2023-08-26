@@ -222,6 +222,57 @@ def always_reversible(iterable):
 
 
 
-# -------------------------------------------------------
+# --------------------------------------------------
+# always_iterable: returns an iterable
+
+def always_iterable(obj, base_type=(str, bytes)):
+    if obj is None:
+        return iter(())
+        # checks the isinstance in all element of base_type
+    if (base_type is not None) and isinstance(obj, base_type):
+        return iter((obj,))
+    
+
+    try:
+        return iter(obj)
+    except TypeError:
+        return iter((obj,))
+    
+
+# print(list(always_iterable(1)))
 
 
+
+
+# --------------------------------------------------
+# split after some action
+
+def split_after(iterable, pred, max_split=-1):
+    if max_split == 0:
+        yield list(iterable)
+        return
+    
+
+    buf = []
+    it = iter(iterable)
+    
+    for item in it:
+        buf.append(item)
+
+        if pred(item) and buf:
+            yield buf
+
+            if max_split == 1:
+                yield(list(it)) # yield the rest of the iterable, not the main
+                # if befor yield(list(it)), the print(list(it)) called the raset of iterable should be [], because elements is used in print(list(it))
+                return
+            buf = []
+            max_split -= 1
+        
+    if buf:
+        yield buf
+
+
+
+# w = 'csxfexfasexfsx'
+# print(list(split_after(w, lambda s: s == 'x', max_split=1)))
