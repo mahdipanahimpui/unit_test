@@ -207,7 +207,21 @@ def only(iterable, default=None, too_long=None):
 
 # -------------------------------------------------------
 
+# always_reversible: returns the reversed of iterables, not changes the main
+
+def always_reversible(iterable):
+    try:
+        return reversed(iterable)
+    except TypeError:
+        return reversed(list(iterable))
 
 
+# print(list(always_reversible(l)))
+
+
+
+
+
+# -------------------------------------------------------
 
 

@@ -338,3 +338,35 @@ class OnlyTests(TestCase):
             lambda: more.only(['foo', 'boo', 'bar'])
         
         )
+
+
+
+class AlwaysReversibelTests(TestCase):
+    def test_regular_reversed(self):
+        self.assertEqual(
+            list(reversed(range(10))), list(more.always_reversible(range(10)))
+        )
+        
+        self.assertEqual(
+            list(reversed([1,2,3])), list(more.always_reversible([1,2,3]))
+        )
+
+        self.assertEqual(
+            reversed([1,3,4]).__class__, more.always_reversible([1,2,3]).__class__
+        )
+
+    def test_nonseq_reversed(self):
+        self.assertEqual( # sending an generator: always_reversible(x for x in range(10)
+            list(reversed(range(10))), list(more.always_reversible(x for x in range(10)))
+        )
+
+        self.assertEqual( # sending an generator: always_reversible(x for x in range(10)
+            list(reversed([1, 2, 3])), list(more.always_reversible(x for x in [1,2,3]))
+        )
+
+        self.assertNotEqual(
+            # generator != list
+            reversed((1,2)).__class__, more.always_reversible(x for x in (1,2)).__class__
+        )
+
+
