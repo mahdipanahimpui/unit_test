@@ -298,3 +298,21 @@ def split_into(iterable, sizes):
 # sizes = [2, 3, None, 2]
 # actual = list(split_into(iterable, sizes))
 # print(actual)
+
+
+
+# -------------------------------------------------------------------------
+# map if: if pred ok next func, else next of next func
+
+def map_if(iterable, pred, func, func_else=lambda x:x):
+    for item in iterable:
+        yield func(item) if pred(item) else func_else(item)
+
+
+
+# iterable = list(range(-5,6))
+# actual = list(map_if(iterable, lambda x: x > 3, lambda x: 'toobig'))
+# expected = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 'toobig']
+# print(actual)
+
+# -----------------------------------------------------------------
