@@ -4,6 +4,7 @@ from collections.abc import Sequence
 from collections import deque
 
 l = [0, 1, 2, 3, 4, 5, 6, 7]
+s = ['a', 'b', 'c', 'd']
 _marker = object()
 e = []
 
@@ -124,3 +125,17 @@ def interleave(*iterable): # * means many iterable is passed iterable=(iterable,
 
 
 # print(list(interleave(['amri'], 'hello')))
+
+
+# ----------------------------------------------------
+# repeat each: repeat each element of iterabel
+from itertools import cycle, repeat
+
+def repeat_each(iterable, n=2):
+    return chain.from_iterable(map(repeat, iterable, repeat(n))) # in each map send the n as param, by repeat(n), Note: repeat is lazy
+
+
+# print(list(repeat_each(s)))
+
+
+# ------------------------------------------------------

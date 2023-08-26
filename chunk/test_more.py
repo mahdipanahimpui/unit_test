@@ -1,7 +1,7 @@
 from unittest import TestCase
 import more
 import traceback
-from itertools import count
+from itertools import count, cycle, repeat
 
 class TakeTests(TestCase):
     def test_simple_take(self):
@@ -199,8 +199,46 @@ class InterLeaveTests(TestCase):
         it_list = ['a', 'b', 'c']
         it_str = '1234'
         it_inf = count() #NOTE: every iterator is a iterable but not inverse
-        acutal = list(more.interleave(it_list, it_str, it_inf))
+        actual = list(more.interleave(it_list, it_str, it_inf))
         expected = ['a', '1', 0, 'b', '2', 1, 'c', '3', 2]
-        self.assertEqual(acutal, expected)
+        self.assertEqual(actual, expected)
 
-        
+
+
+
+class RepeatEachTests(TestCase):
+    def test_default(self):
+        actual = list(more.repeat_each('abc'))
+        excepted = ['a', 'a', 'b', 'b', 'c', 'c']
+        self.assertEqual(actual, excepted)
+
+    def test_basic(self):
+        actual = list(more.repeat_each('abc', 3))
+        expected = ['a', 'a', 'a', 'b', 'b', 'b', 'c', 'c', 'c']
+        self.assertEqual(actual, expected)
+
+
+    def test_no_repeat(self):
+        actual = list(more.repeat_each('abc', 0))
+        expected = []
+        self.assertEqual(actual, expected)
+
+    
+    def test_empty(self):
+        actual = list(more.repeat_each(''))
+        expected = []
+        self.assertEqual(actual, expected)
+
+
+    def test_negative_repeat(self):
+        actual = list(more.repeat_each('abc', -1))
+        expected = []
+        self.assertEqual(actual, expected) 
+
+            
+    def test_infinite_input(self):
+        repeator = more.repeat_each(cycle('ab')) # cycle is lazy, works by next
+        actual = more.take(repeator, 6) 
+        expected = ['a', 'a', 'b', 'b', 'a', 'a']
+        self.assertEqual(actual, expected)
+
