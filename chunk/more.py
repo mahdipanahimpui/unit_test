@@ -316,3 +316,43 @@ def map_if(iterable, pred, func, func_else=lambda x:x):
 # print(actual)
 
 # -----------------------------------------------------------------
+# time limited: limit time for and iterate an iterable
+
+from time import monotonic
+from time import sleep
+# monotnic not effected from the summer clock
+
+class time_limited:
+    def __init__(self, limit_seconds, iterable):
+        if limit_seconds < 0:
+            raise ValueError('limit_seconds must be positive')
+        
+        self.limit_seconds = limit_seconds
+        self._iterable = iter(iterable)
+        self._start_time = monotonic()
+        self.timeout = False
+
+    def __iter__(self):
+        return self
+    
+    def __next__(self):
+        item = next(self._iterable)
+        if monotonic() - self._start_time > self.limit_seconds:
+            self.timeout = True
+            raise StopIteration
+        
+        return item
+    
+def gen():
+    sleep(0.2)
+    yield 1
+    yield 2
+    sleep(0.8) 
+    yield 3
+    sleep(0.2)
+    yield 4
+print(list(time_limited(1, gen())))
+
+
+
+# ----------------------------------------------------------

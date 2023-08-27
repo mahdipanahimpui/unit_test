@@ -673,3 +673,46 @@ class MapIfTests(TestCase):
         actual = list(more.map_if([], lambda x: len(x) > 5, lambda x: None))
         excepted = []
         self.assertEqual(actual, excepted)
+
+
+
+from time import sleep
+
+class TimeLimitedTests(TestCase):
+
+    def test_basic(self):
+
+        def generator():
+            yield 1
+            yield 2
+            sleep(0.2)
+            yield 3
+        
+        iterable = more.time_limited(0.1, generator())
+        actual = list(iterable)
+        excepted = [1, 2]
+        self.assertEqual(actual, excepted)
+        self.assertTrue(iterable.timeout)
+
+
+    def test_complete(self):
+        iterable = more.time_limited(2, iter(range(10)))
+        actual = list(iterable)
+        excepted = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        self.assertEqual(actual, excepted)
+        self.assertFalse(iterable.timeout)
+
+    def test_ziro_limit(self):
+        iterable = more.time_limited(0, count())
+        actual = list(iterable)
+        excepted = []
+        self.assertEqual(actual, excepted)
+        self.assertTrue(iterable.timeout)
+
+
+    def test_invalid_limit(self):
+        with self.assertRaises(ValueError):
+            list(more.time_limited(-0.1, count()))
+
+
+    
