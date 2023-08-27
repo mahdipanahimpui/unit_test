@@ -720,7 +720,7 @@ class TimeLimitedTests(TestCase):
 
 
 from unittest import skipIf
-from operator import add
+from operator import sub
 from itertools import accumulate
 from sys import version_info
 
@@ -733,7 +733,7 @@ class DifferenceTests(TestCase):
 
     def test_custom(self):
         iterable = [10, 20, 30,]
-        actual = list(more.difference(iterable, add))
+        actual = list(more.difference(iterable, sub))
         excepted = [10, 10, 10]
         self.assertEqual(actual, excepted)
 
@@ -787,3 +787,25 @@ class ValueChainTests(TestCase):
         self.assertEqual(actual, excepted)
 
 
+
+class SequenceViewTests(TestCase):
+    def test_init(self):
+        view = more.SequenceView((1, 2, 3))
+        self.assertEqual(repr(view), 'SequenceView((1, 2, 3))')
+        self.assertRaises(TypeError, lambda: more.SequenceView({}))
+
+
+    def test_update(self):
+        seq = [1, 2, 3]
+        view = more.SequenceView(seq)
+        self.assertEqual(len(view), 3)
+        
+        seq.pop()
+        self.assertEqual(len(view), 2)
+
+    
+    def test_index(self):
+        seq = ('a', 'b', 'c')
+        view = more.SequenceView(seq)
+        for i in range(-len(seq), len(seq)):
+            self.assertEqual(view[i], seq[i])
