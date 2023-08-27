@@ -382,3 +382,20 @@ print(list(accumulate([2, 3, 7], initial=200))) # [100, 102, 105, 112]
 
 print(list(difference([100, 102, 105, 112], sub, initial=1)))
 
+
+
+
+
+# -------------------------------------------------------------------------
+
+# value chain:
+
+def value_chain(*args):
+    for value in args:
+        if isinstance(value, (str, bytes)):
+            yield value
+            continue
+        try:
+            yield from value # if args element are iterabel, iterate in inner of them
+        except TypeError: # if inner is not iterable 
+            yield value 

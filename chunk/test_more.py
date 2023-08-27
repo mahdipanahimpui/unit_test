@@ -759,3 +759,31 @@ class DifferenceTests(TestCase):
         accumulated = accumulate(original, initial=100)
         actual = list(more.difference(accumulated, initial=100))
         self.assertEqual(actual, original)
+
+
+
+class ValueChainTests(TestCase):
+    def test_empty(self):
+        actual = list(more.value_chain())
+        excepted = []
+        self.assertEqual(actual, excepted)
+
+
+    def test_simple(self):
+        actual = list(more.value_chain(1, 2.17, False, 'foo'))
+        excepted = [1, 2.17, False, 'foo']
+        self.assertEqual(actual, excepted)
+
+
+    def test_simple(self):
+        actual = list(more.value_chain(b'bar', [1,2, 3], 4, {'key': 1}))
+        excepted = [b'bar', 1, 2, 3, 4, 'key']
+        self.assertEqual(actual, excepted)
+
+
+    def test_empty_list(self):
+        actual = list(more.value_chain(b'bar', [1,2, 3], [], {'key': 1}))
+        excepted = [b'bar', 1, 2, 3, 'key']
+        self.assertEqual(actual, excepted)
+
+
