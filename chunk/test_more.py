@@ -716,3 +716,46 @@ class TimeLimitedTests(TestCase):
 
 
     
+
+
+
+from unittest import skipIf
+from operator import add
+from itertools import accumulate
+from sys import version_info
+
+class DifferenceTests(TestCase):
+    def test_normal(self):
+        iterable = [10, 20, 30,]
+        actual = list(more.difference(iterable))
+        excepted = [10, 10, 10]
+        self.assertEqual(actual, excepted)
+
+    def test_custom(self):
+        iterable = [10, 20, 30,]
+        actual = list(more.difference(iterable, add))
+        excepted = [10, 10, 10]
+        self.assertEqual(actual, excepted)
+
+
+    def test_roundtrip(self):
+        original = list(range(100))
+        accumulated = accumulate(original)
+        actual = list(more.difference(accumulated))
+        self.assertEqual(actual, original)
+
+
+    def test_one(self):
+        self.assertEqual(list(more.difference([])), [])
+
+
+    def test_empty(self):
+        self.assertEqual(list(more.difference([0])), [0])
+
+
+    @skipIf(version_info[:2] < (3, 8), 'accumulate with initila needs + 3.8')
+    def test_initial(self):
+        original = list(range(100))
+        accumulated = accumulate(original, initial=100)
+        actual = list(more.difference(accumulated, initial=100))
+        self.assertEqual(actual, original)

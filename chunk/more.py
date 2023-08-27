@@ -351,8 +351,34 @@ def gen():
     yield 3
     sleep(0.2)
     yield 4
-print(list(time_limited(1, gen())))
+# print(list(time_limited(1, gen())))
 
 
 
 # ----------------------------------------------------------
+# difference
+
+from operator import sub
+from itertools import tee
+from itertools import starmap
+from itertools import accumulate
+
+def difference(iterable, func=sub, *, initial=None): # * means after *, all params should be key, value
+    a, b = tee(iterable)
+
+    try:
+        first = [next(b)]
+    except StopIteration:
+        return iter([])
+    
+    if initial is not None:
+        first = []
+
+    return chain(first, starmap(func, zip(b, a))) # b is iterate 
+
+# print([2,3,7])
+
+print(list(accumulate([2, 3, 7], initial=200))) # [100, 102, 105, 112]
+
+print(list(difference([100, 102, 105, 112], sub, initial=1)))
+
