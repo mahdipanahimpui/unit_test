@@ -1,0 +1,37 @@
+Moc and patch: 
+    it is used to simulation
+
+
+###################### to run the test in mock<number>, cd in that directory #####################
+
+
+
+
+in python shell:
+
+from unittest.mock import mock
+
+upload = Mock()
+
+## methods and attrs is not defined
+
+# call method in mock obj
+upload.send()
+
+# call attributes
+upload.is_sent
+
+# call method with args
+upload.send('amir', [2, 3])
+
+
+# assert_called: check a method is called before
+upload.send.assert_called    # is not called yet, assert False
+
+# count method calls
+upload.one.call_count  # result is 0
+upload.send.call_count # result is 2
+
+
+# return value of mock, to change the value reutrned by a method
+# example is in mock2 directory
